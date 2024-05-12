@@ -1,0 +1,952 @@
+#include <iostream>
+#include <string>
+#include <conio.h>
+#include <iomanip>
+#include <fstream>
+#include "windows.h"
+using namespace std;
+const int sl_sv = 100000;
+const int sl_gv = 100000;
+int sinhvien = 0;
+int giangvien = 0;
+struct sinh_vien
+{
+    string name, mssv, gpa, cpa, tk_sv, mk_sv;
+};
+struct giang_vien
+{
+    string ten, msgv, sdt, tk_gv, mk_gv;
+};
+sinh_vien students[sl_sv];
+giang_vien teachers[sl_gv];
+void them_sv()
+{
+    int n;
+    if (sinhvien < sl_sv)
+    {
+        cout << "Nhập số lượng sinh viên thêm: ";
+        cin >> n;
+        for (int i = 0; i < n; i++)
+        {
+            cout << "Tên sinh viên: ";
+            cin.ignore();
+            getline(cin, students[sinhvien].name);
+            int mssv;
+            cout << "Mã số sinh viên: ";
+            cin >> students[sinhvien].mssv;
+            cout << "Tài khoản sinh viên: ";
+            cin >> students[sinhvien].tk_sv;
+            cout << "Mật khẩu sinh viên: ";
+            cin >> students[sinhvien].mk_sv;
+            cout << "Điểm GPA: ";
+            cin >> students[sinhvien].gpa;
+            cout << "Điểm CPA: ";
+            cin >> students[sinhvien].cpa;
+            cout << "\n";
+            sinhvien++;
+        }
+    }
+    else
+    {
+        cout << "Đã đạt số lượng sinh viên tối đa." << endl;
+    }
+}
+void them_gv()
+{
+    int n;
+    if (giangvien < sl_gv)
+    {
+        cout << "Nhập số lượng giảng viên thêm: ";
+        cin >> n;
+        for (int i = 0; i < n; i++)
+        {
+            cout << "Tên giảng viên: ";
+            cin.ignore();
+            getline(cin, teachers[giangvien].ten);
+            int msgv;
+            cout << "Mã số giảng viên: ";
+            cin >> teachers[giangvien].msgv;
+            cout << "Số điện thoại: ";
+            cin >> teachers[giangvien].sdt;
+            cout << "Tài khoản giảng viên: ";
+            cin >> teachers[giangvien].tk_gv;
+            cout << "Mật khẩu giảng viên: ";
+            cin >> teachers[giangvien].mk_gv;
+            cout << "\n";
+            giangvien++;
+        }
+    }
+    else
+    {
+        cout << "Đã đạt số lượng giảng viên tối đa." << endl;
+    }
+}
+void xem_sv()
+{
+    for (int i = 0; i < sinhvien; i++)
+    {
+        cout << "Tên sinh viên: " << students[i].name << endl;
+        cout << "Mã số sinh viên: " << students[i].mssv << endl;
+        cout << "Điểm GPA: " << students[i].gpa << endl;
+        cout << "Điểm CPA: " << students[i].cpa << endl;
+        cout << "\n";
+    }
+}
+void xem_gv()
+{
+    for (int i = 0; i < giangvien; i++)
+    {
+        cout << "Tên giảng viên: " << teachers[i].ten << endl;
+        cout << "Mã số giảng viên: " << teachers[i].msgv << endl;
+        cout << "Số điện thoại: " << teachers[i].sdt << endl;
+        cout << "\n";
+    }
+}
+void tim_sv(string name)
+{
+    bool found = false;
+    for (int i = 0; i < sinhvien; i++)
+    {
+        if (students[i].name == name)
+        {
+            found = true;
+            cout << "Tên sinh viên: " << students[i].name << endl;
+            cout << "Mã số sinh viên: " << students[i].mssv << endl;
+            cout << "Điểm GPA: " << students[i].gpa << endl;
+            cout << "Điểm CPA: " << students[i].cpa << endl;
+            break;
+        }
+    }
+    if (!found)
+    {
+        cout << "Không tìm thấy sinh viên." << endl;
+    }
+}
+void xoa_sv(string name)
+{
+    for (int i=0; i<sinhvien; i++)
+    {
+        if (students[i].name == name)
+        {
+            for (int j=i; j<sinhvien-1; j++)
+            {
+                students[j] = students[j+1];
+            }
+            sinhvien--;
+            cout << "Đã xóa sinh viên." << endl;
+            return;
+        }
+    }
+    cout << "Không tìm thấy sinh viên để xóa." << endl;
+}
+void xoa_gv(string ten)
+{
+    for (int i=0; i<giangvien; i++)
+    {
+        if (teachers[i].ten == ten)
+        {
+            for (int j=i; j<giangvien-1; j++)
+            {
+                teachers[j] = teachers[j+1];
+            }
+            giangvien--;
+            cout << "Đã xóa giảng viên." << endl;
+            return;
+        }
+    }
+    cout << "Không tìm thấy sinh viên để xóa." << endl;
+}
+void tim_gv(string ten)
+{
+    bool found = false;
+    for (int i = 0; i < giangvien; i++)
+    {
+        if (teachers[i].ten == ten)
+        {
+            found = true;
+            cout << "Tên giảng viên: " << teachers[i].ten << endl;
+            cout << "Mã số giảng viên: " << teachers[i].msgv << endl;
+            cout << "Số điện thoại: " << teachers[i].sdt << endl;
+            break;
+        }
+    }
+    if (!found)
+    {
+        cout << "Không tìm thấy giảng viên." << endl;
+    }
+}
+void sua_sv_pdt()
+{
+    string edit_name;
+    cout << "Tên sinh viên cần chỉnh sửa thông tin: ";
+    cin.ignore();
+    getline(cin, edit_name);
+    bool found = false;
+    for (int i = 0; i < sinhvien; i++)
+    {
+        if (students[i].name == edit_name)
+        {
+            found = true;
+            cout << "Tên sinh viên: " << students[i].name << endl;
+            cout << "Mã số sinh viên: " << students[i].mssv << endl;
+            cout << "Điểm GPA: " << students[i].gpa << endl;
+            cout << "Điểm CPA: " << students[i].cpa << endl;
+            cout << "Nhập thông tin mới cho sinh viên:" << endl;
+            cout << "Tên sinh viên: ";
+            getline(cin, students[i].name);
+            cout << "Mã số sinh viên: ";
+            cin >> students[i].mssv;
+            cout << "Điểm GPA: ";
+            cin >> students[i].gpa;
+            cout << "Điểm CPA: ";
+            cin >> students[i].cpa;
+            cout << "Thông tin sinh viên đã được cập nhật." << endl;
+            break;
+        }
+    }
+    if (!found)
+    {
+        cout << "Không tìm thấy sinh viên." << endl;
+    }
+}
+void sua_sv_gv()
+{
+    string edit_name;
+    cout << "Tên sinh viên cần chỉnh sửa thông tin: ";
+    cin.ignore();
+    getline(cin, edit_name);
+    bool found = false;
+    for (int i = 0; i < sinhvien; i++)
+    {
+        if (students[i].name == edit_name)
+        {
+            found = true;
+            cout << "Tên sinh viên: " << students[i].name << endl;
+            cout << "Mã số sinh viên: " << students[i].mssv << endl;
+            cout << "Điểm GPA: " << students[i].gpa << endl;
+            cout << "Điểm CPA: " << students[i].cpa << endl;
+            cout << "Nhập điểm mới cho sinh viên:" << endl;
+            cout << "Điểm GPA: ";
+            cin >> students[i].gpa;
+            cout << "Điểm CPA: ";
+            cin >> students[i].cpa;
+            cout << "Điểm sinh viên đã được cập nhật." << endl;
+            break;
+        }
+    }
+    if (!found)
+    {
+        cout << "Không tìm thấy sinh viên." << endl;
+    }
+}
+void sua_gv()
+{
+    string edit_name;
+    cout << "Nhập tên giảng viên cần chỉnh sửa thông tin: ";
+    cin.ignore();
+    getline(cin, edit_name);
+    bool found = false;
+    for (int i = 0; i < giangvien; i++)
+    {
+        if (teachers[i].ten == edit_name)
+        {
+            found = true;
+            cout << "Tên giảng viên: " << teachers[i].ten << endl;
+            cout << "Mã số giảng viên: " << teachers[i].msgv << endl;
+            cout << "Số điện thoại: " << teachers[i].sdt << endl;
+            cout << "Nhập thông tin mới cho giảng viên:" << endl;
+            cout << "Tên giảng viên: ";
+            getline(cin, teachers[i].ten);
+            cout << "Mã số giảng viên: ";
+            cin >> teachers[i].msgv;
+            cout << "Số điện thoại: ";
+            cin >> teachers[i].sdt;
+            cout << "Thông tin giảng viên đã được cập nhật." << endl;
+            break;
+        }
+    }
+    if (!found)
+    {
+        cout << "Không tìm thấy giảng viên." << endl;
+    }
+}
+sinh_vien* dang_nhap(const string& tk_sv, const string& mk_sv)
+{
+    for (int i = 0; i < sinhvien; i++)
+    {
+        if (students[i].tk_sv == tk_sv && students[i].mk_sv == mk_sv)
+        {
+            return &students[i];
+        }
+    }
+    return nullptr;
+}
+giang_vien* dang_nhap_gv(const string& tk_gv, const string& mk_gv)
+{
+    for (int i = 0; i < giangvien; i++)
+    {
+        if (teachers[i].tk_gv == tk_gv && teachers[i].mk_gv == mk_gv)
+        {
+            return &teachers[i];
+        }
+    }
+    return nullptr;
+}
+string nhap_tk(bool& esc)
+{
+    string tk_sv = "";
+    char a;
+    while (true)
+    {
+        a = _getch();
+        if (a == 13)
+        {
+            cout << endl;
+            break;
+        }
+        else if (a == 27)
+        {
+            esc = true;
+            break;
+        }
+        else if (a == 8)
+        {
+            if (tk_sv.length() > 0)
+            {
+                cout << "\b \b";
+                tk_sv.pop_back();
+            }
+        }
+        else
+        {
+            cout << a;
+            tk_sv.push_back(a);
+        }
+    }
+    return tk_sv;
+}
+string nhap_mk(bool& esc_pressed)
+{
+    string mk_sv = "";
+    char p;
+    while (true)
+    {
+        p = _getch();
+        if (p == 13)
+        {
+            cout << endl;
+            break;
+        }
+        else if (p == 27)
+        {
+            esc_pressed = true;
+            break;
+        }
+        else if (p == 8)
+        {
+            if (mk_sv.length() > 0)
+            {
+                cout << "\b \b";
+                mk_sv.pop_back();
+            }
+        }
+        else
+        {
+            cout << "*";
+            mk_sv.push_back(p);
+        }
+    }
+    return mk_sv;
+}
+bool login(const string& account, const string& pass)
+{
+    string default_account = account;
+    string default_password = pass;
+    bool esc = false;
+    bool esc_pressed = false;
+    cout << "Nhập tài khoản: ";
+    string input_account = nhap_tk(esc);
+    if (esc)
+    {
+        system ("cls");
+        return false;
+    }
+    cout << "Nhập mật khẩu: ";
+    string input_password = nhap_mk(esc_pressed);
+    if (esc || esc_pressed)
+    {
+        system ("cls");
+        return false;
+    }
+    if (input_account != default_account || input_password != default_password)
+    {
+        system ("cls");
+        cout << "Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.\n";
+        return login (account, pass);
+    }
+    else
+    {
+        system("cls");
+        return true;
+    }
+}
+sinh_vien* login()
+{
+    bool esc = false;
+    bool esc_pressed = false;
+    cout << "Nhập tài khoản: ";
+    string input_tk_sv = nhap_tk(esc);
+    if (esc)
+    {
+        system ("cls");
+        return nullptr;
+    }
+    cout << "Nhập mật khẩu: ";
+    string input_mk_sv = nhap_mk(esc_pressed);
+    if (esc_pressed)
+    {
+        system ("cls");
+        return nullptr;
+    }
+    sinh_vien* student = dang_nhap(input_tk_sv, input_mk_sv);
+    if (student == nullptr)
+    {
+        system ("cls");
+        cout << "Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.\n";
+        return login();
+    }
+    else
+    {
+        system("cls");
+        return student;
+    }
+}
+giang_vien* login_gv()
+{
+    bool esc = false;
+    bool esc_pressed = false;
+    cout << "Nhập tài khoản: ";
+    string input_tk_gv = nhap_tk(esc);
+    if (esc)
+    {
+        system ("cls");
+        return nullptr;
+    }
+    cout << "Nhập mật khẩu: ";
+    string input_mk_gv = nhap_mk(esc_pressed);
+    if (esc_pressed)
+    {
+        system ("cls");
+        return nullptr;
+    }
+    giang_vien* teacher = dang_nhap_gv(input_tk_gv, input_mk_gv);
+    if (teacher == nullptr)
+    {
+        system ("cls");
+        cout << "Sai tài khoản hoặc mật khẩu. Vui lòng thử lại.\n";
+        return login_gv();
+    }
+    else
+    {
+        system("cls");
+        return teacher;
+    }
+}
+void doi_mk_sv(sinh_vien* student, const string& mk_sv)
+{
+    string mk_moi;
+        cout << "Nhập mật khẩu mới: ";
+        cin >> mk_moi;
+    student->mk_sv = mk_moi;
+    cout << "Mật khẩu đã được thay đổi thành công!" << endl;
+}
+void doi_mk_gv(giang_vien* teacher, const string& mk_gv)
+{
+    string mk_moi;
+        cout << "Nhập mật khẩu mới: ";
+        cin >> mk_moi;
+    teacher->mk_gv = mk_moi;
+    cout << "Mật khẩu đã được thay đổi thành công!" << endl;
+}
+void doi_mk_pdt(const string& tk_sv_pdt, string& pass_pdt)
+{
+    string mk_moi;
+        cout << "Nhập mật khẩu mới: ";
+        cin >> mk_moi;
+    pass_pdt = mk_moi;
+    cout << "Mật khẩu đã được thay đổi thành công!" << endl;
+}
+int pdt()
+{
+    string a;
+    char b;
+    string search_name, delete_name;
+    string tk_sv_pdt = "phongdaotao";
+    string pass_pdt = "phongdaotao";
+    if (!login(tk_sv_pdt, pass_pdt))
+    {
+        return true;
+    }
+    do
+    {
+        cout << "HỆ THỐNG QUẢN LÝ SINH VIÊN - TRANG DÀNH CHO PHÒNG ĐÀO TẠO\n" << endl;
+        cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~MENU~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+        cout << " 1. Thêm sinh viên mới\n" << endl;
+        cout << " 2. Hiển thị tất cả sinh viên\n" << endl;
+        cout << " 3. Sửa thông tin sinh viên\n" << endl;
+        cout << " 4. Xóa sinh viên\n" << endl;
+        cout << " 5. Đổi mật khẩu\n" << endl;
+        cout << " 6. Thêm giảng viên mới\n" << endl;
+        cout << " 7. Hiển thị tất cả giảng viên\n" << endl;
+        cout << " 8. Sửa thông tin giảng viên\n" << endl;
+        cout << " 9. Xóa giảng viên\n" << endl;
+        cout << " 10. Thoát\n" << endl;
+        cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+        cout << "Nhập lựa chọn của bạn: ";
+        cin >> a;
+        system ("cls");
+        if(a == "1")
+        {
+            them_sv();
+            system ("cls");
+        }
+        else if (a == "2")
+        {
+            xem_sv();
+            cout << "Nhấn esc để quay lại\n";
+            do
+            {
+                b=_getch();
+                if (b == 27)
+                {
+                    system ("cls");
+                    break;
+                }
+                else
+                {
+                    cout << "Vui lòng thử lại\n";
+                }
+            }
+        while (true);
+        }
+        else if (a == "3")
+        {
+            sua_sv_pdt();
+            cout << "Nhấn esc để quay lại\n";
+            do
+            {
+                b=_getch();
+                if (b == 27)
+                {
+                    system ("cls");
+                    break;
+                }
+                else
+                {
+                    cout << "Vui lòng thử lại\n";
+                }
+            }
+        while (true);
+        }
+        else if (a == "4")
+        {
+            cout << "Nhập tên sinh viên cần xóa: ";
+            cin.ignore();
+            getline(cin, delete_name);
+            xoa_sv(delete_name);
+            cout << "Nhấn esc để quay lại\n";
+            do
+            {
+                b=_getch();
+                if (b == 27)
+                {
+                    system ("cls");
+                    break;
+                }
+                else
+                {
+                    cout << "Vui lòng thử lại\n";
+                }
+            }
+        while (true);
+        }
+        else if (a == "5")
+        {
+            doi_mk_pdt(tk_sv_pdt, pass_pdt);
+            cout << "Nhấn esc để quay lại\n";
+            do
+            {
+                b=_getch();
+                if (b == 27)
+                {
+                    system ("cls");
+                    break;
+                }
+                else
+                {
+                    cout << "Vui lòng thử lại\n";
+                }
+            }
+        while (true);
+        }
+        else if (a == "6")
+        {
+            them_gv();
+            system ("cls");
+        }
+        else if (a == "7")
+        {
+            xem_gv();
+            cout << "Nhấn esc để quay lại\n";
+            do
+            {
+                b=_getch();
+                if (b == 27)
+                {
+                    system ("cls");
+                    break;
+                }
+                else
+                {
+                    cout << "Vui lòng thử lại\n";
+                }
+            }
+        while (true);
+        }
+        else if (a == "8")
+        {
+            sua_gv();
+            cout << "Nhấn esc để quay lại\n";
+            do
+            {
+                b=_getch();
+                if (b == 27)
+                {
+                    system ("cls");
+                    break;
+                }
+                else
+                {
+                    cout << "Vui lòng thử lại\n";
+                }
+            }
+        while (true);
+        }
+        else if (a == "9")
+        {
+            cout << "Nhập tên giảng viên cần xóa: ";
+            cin.ignore();
+            getline(cin, delete_name);
+            xoa_gv(delete_name);
+            cout << "Nhấn esc để quay lại\n";
+            do
+            {
+                b=_getch();
+                if (b == 27)
+                {
+                    system ("cls");
+                    break;
+                }
+                else
+                {
+                    cout << "Vui lòng thử lại\n";
+                }
+            }
+        while (true);
+        }
+        else if (a == "10")
+        {
+            return true;
+        }
+        else
+        {
+            cout << "Vui lòng thử lại" << endl;
+        }
+    }
+    while (a != "10");
+    return 0;
+}
+int gv()
+{
+    char a, b;
+    giang_vien* gv = login_gv();
+    if (gv != nullptr)
+    {
+        do
+        {
+            cout << "HỆ THỐNG QUẢN LÝ SINH VIÊN - TRANG DÀNH CHO GIẢNG VIÊN\n" << endl;
+            cout << "~~~~~~~~~~~~~~~~~~~~~MENU~~~~~~~~~~~~~~~~~~~~~~\n";
+            cout << gv->ten << "\n" << endl;
+            cout << " 1. Thông tin giảng viên\n" << endl;
+            cout << " 2. Cập nhật điểm sinh viên\n" << endl;
+            cout << " 3. Đổi mật khẩu\n" << endl;
+            cout << " 4. Thoát\n" << endl;
+            cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+            cout << "Nhập lựa chọn của bạn: ";
+            cin >> a;
+            system ("cls");
+            switch (a)
+            {
+                case '1':
+                    cout << "Tên: " << gv->ten << endl;
+                    cout << "MSGV: " << gv->msgv << endl;
+                    cout << "Số điện thoại: " << gv->sdt << endl;
+                    cout << "Nhấn esc để quay lại\n";
+                    do
+                    {
+                        b=_getch();
+                        if (b == 27)
+                        {
+                            system ("cls");
+                            break;
+                        }
+                        else
+                        {
+                            cout << "Vui lòng thử lại\n";
+                        }
+                    }
+                    while (true);
+                    break;
+                case '2':
+                    sua_sv_gv();
+                    cout << "Nhấn esc để quay lại\n";
+                    do
+                    {
+                        b=_getch();
+                        if (b == 27)
+                        {
+                            system ("cls");
+                            break;
+                        }
+                        else
+                        {
+                            cout << "Vui lòng thử lại\n";
+                        }
+                    }
+                    while (true);
+                    break;
+                case '3':
+                    doi_mk_gv(gv, gv->mk_gv);
+                    cout << "Nhấn esc để quay lại\n";
+                    do
+                    {
+                        b=_getch();
+                        if (b == 27)
+                        {
+                            system ("cls");
+                            break;
+                        }
+                        else
+                        {
+                            cout << "Vui lòng thử lại\n";
+                        }
+                    }
+                    while (true);
+                    break;
+                case '4':
+                    return 0;
+                    break;
+                default:
+                    cout << "Vui lòng thử lại" << endl;
+                    break;
+            }
+        }
+        while (a != 4);
+    }
+    else
+    {
+        return 0;
+    }
+    return 0;
+}
+int sv()
+{
+    char a, b;
+    string search_name;
+    sinh_vien* sv = login();
+    if (sv != nullptr)
+    {
+        do
+        {
+            cout << "HỆ THỐNG QUẢN LÝ SINH VIÊN - TRANG DÀNH CHO SINH VIÊN\n" << endl;
+            cout << "~~~~~~~~~~~~~~~~~~~~~MENU~~~~~~~~~~~~~~~~~~~~~~\n";
+            cout << sv->name << "\n" << endl;
+            cout << " 1. Thông tin sinh viên\n" << endl;
+            cout << " 2. Đổi mật khẩu\n" << endl;
+            cout << " 3. Tra cứu\n" << endl;
+            cout << " 4. Thoát\n" << endl;
+            cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+            cout << "Nhập lựa chọn của bạn: ";
+            cin >> a;
+            system ("cls");
+            switch (a)
+            {
+                case '1':
+                    cout << " Tên: " << sv->name << endl;
+                    cout << " MSSV: " << sv->mssv << endl;
+                    cout << " Điểm GPA: " << sv->gpa << endl;
+                    cout << " Điểm CPA: " << sv->cpa << endl;
+                    cout << "Nhấn esc để quay lại\n";
+                    do
+                    {
+                        b=_getch();
+                        if (b == 27)
+                        {
+                            system ("cls");
+                            break;
+                        }
+                        else
+                        {
+                            cout << "Vui lòng thử lại\n";
+                        }
+                    }
+                    while (true);
+                    break;
+                case '2':
+                    doi_mk_sv(sv, sv->mk_sv);
+                    cout << "Nhấn esc để quay lại\n";
+                    do
+                    {
+                        b=_getch();
+                        if (b == 27)
+                        {
+                            system ("cls");
+                            break;
+                        }
+                        else
+                        {
+                            cout << "Vui lòng thử lại\n";
+                        }
+                    }
+                    while (true);
+                    break;
+                case '3':
+                    cout << "Nhập tên sinh viên cần tìm kiếm: ";
+                    cin.ignore();
+                    getline(cin, search_name);
+                    tim_sv(search_name);
+                    cout << "Nhấn esc để quay lại\n";
+                    do
+                    {
+                        b=_getch();
+                        if (b == 27)
+                        {
+                            system ("cls");
+                            break;
+                        }
+                        else
+                        {
+                            cout << "Vui lòng thử lại\n";
+                        }
+                    }
+                    while (true);
+                    break;
+                case '4':
+                    return 0;
+                    break;
+                default:
+                    cout << "Vui lòng thử lại" << endl;
+                    break;
+            }
+        }
+        while (a != 4);
+    }
+    else
+    {
+        return 0;
+    }
+    return 0;
+}
+int ph()
+{
+    char a, b;
+    string search_name;
+    do
+    {
+        cout << "HỆ THỐNG QUẢN LÝ SINH VIÊN - TRANG DÀNH CHO PHỤ HUYNH\n" << endl;
+        cout << "~~~~~~~~~~~~~~~~~~~~~MENU~~~~~~~~~~~~~~~~~~~~~~\n";
+        cout << "  1. Tìm kiếm sinh viên\n" << endl;
+        cout << "  2. Thoát\n" << endl;
+        cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+        cout << "Nhập lựa chọn của bạn: ";
+        cin >> a;
+        system ("cls");
+        switch (a)
+        {
+            case '1':
+                cout << "Nhập tên sinh viên cần tìm kiếm: ";
+                cin.ignore();
+                getline(cin, search_name);
+                tim_sv(search_name);
+                cout << "Nhấn esc để quay lại\n";
+                    do
+                    {
+                        b=_getch();
+                        if (b == 27)
+                        {
+                            system ("cls");
+                            break;
+                        }
+                        else
+                        {
+                            cout << "Vui lòng thử lại\n";
+                        }
+                    }
+                    while (true);
+                break;
+            case '2':
+                return 0;
+                break;
+            default:
+                cout << "Vui lòng thử lại" << endl;
+                break;
+        }
+    }
+    while (a != 2);
+    return 0;
+}
+int main()
+{
+    char a;
+    SetConsoleOutputCP(65001);
+    do
+    {
+        cout << "HỆ THỐNG QUẢN LÝ SINH VIÊN\n" << endl;
+        cout << "~~~~~~~~~~~~~~~~~~~~~MENU~~~~~~~~~~~~~~~~~~~~~~\n";
+        cout << " 1. Trang dành cho Phòng Đào Tạo\n" << endl;
+        cout << " 2. Trang dành cho giảng viên\n" << endl;
+        cout << " 3. Trang dành cho sinh viên\n" << endl;
+        cout << " 4. Trang dành cho phụ huynh\n" << endl;
+        cout << " 5. Thoát\n" << endl;
+        cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n";
+        cout << "Nhập lựa chọn của bạn: ";
+        cin >> a;
+        system ("cls");
+        switch (a)
+        {
+            case '1':
+                pdt();
+                system ("cls");
+                break;
+            case '2':
+                gv();
+                system("cls");
+                break;
+            case '3':
+                sv();
+                system("cls");
+                break;
+            case '4':
+                ph();
+                system("cls");
+                break;
+            case '5':
+                return 0;
+            default:
+                cout << "Vui lòng thử lại" << endl;
+                break;
+        }
+    }
+    while (a != 5);
+    return 0;
+}
